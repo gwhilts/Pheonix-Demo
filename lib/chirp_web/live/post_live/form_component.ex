@@ -9,7 +9,7 @@ defmodule ChirpWeb.PostLive.FormComponent do
     <div>
       <.header>
         <%= @title %>
-        <:subtitle>You got something to say?.</:subtitle>
+        <:subtitle>You got something to say?</:subtitle>
       </.header>
 
       <.simple_form

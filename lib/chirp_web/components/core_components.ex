@@ -530,7 +530,7 @@ defmodule ChirpWeb.CoreComponents do
         navigate={@navigate}
         class="text-sm font-semibold leading-6 text-zinc-900 hover:text-zinc-700"
       >
-        <Heroicons.arrow_left solid class="w-3 h-3 stroke-current inline" />
+        <Heroicons.arrow_left_circle class="w-4 h-4 stroke-current inline" />
         <%= render_slot(@inner_block) %>
       </.link>
     </div>
