@@ -10,12 +10,12 @@ defmodule ChirpWeb.PostLive.PostComponent do
       <div class="p-1 pl-20 font-bold">@<%= @post.username %></div>
       <div class="p-1 pl-20"><%= @post.body %></div>
       <div class="actions text-center">
-        <span class="pl-3 pr-3">
+        <a href="#" class="pl-3 pr-3" phx-click="like" phx-target={@myself}>
           <Heroicons.heart class="w-4 h-4 stroke-current inline" /> <%= @post.likes_count %>
-        </span>
-        <span class="pl-3 pr-3">
+        </a>
+        <a href="#" class="pl-3 pr-3" phx-click="repost" phx-target={@myself}>
           <Heroicons.arrow_path_rounded_square class="w-4 h-4 stroke-current inline" /> <%= @post.repost_count %>
-        </span>
+        </a>
         <.link patch={~p"/posts/#{@post.id}/edit"} class="pl-3 pr-3">
           <Heroicons.pencil_square class="w-4 h-4 stroke-current inline" />
         </.link>
@@ -25,5 +25,15 @@ defmodule ChirpWeb.PostLive.PostComponent do
       </div>
     </div>
     """
+  end
+
+  def handle_event("like", _, socket) do
+    Chirp.Timeline.inc_likes(socket.assigns.post)
+    {:noreply, socket}
+  end
+
+  def handle_event("repost", _, socket) do
+    Chirp.Timeline.inc_reposts(socket.assigns.post)
+    {:noreply, socket}
   end
 end
