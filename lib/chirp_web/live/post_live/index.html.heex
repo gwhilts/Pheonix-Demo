@@ -7,7 +7,7 @@
   </:actions>
 </.header>
 
-<div id="posts">
+<div id="posts" phx-update="prepend">
   <%= for post <- @posts do %>
     <%= live_component ChirpWeb.PostLive.PostComponent, id: post.id, post: post %>
   <% end %>
