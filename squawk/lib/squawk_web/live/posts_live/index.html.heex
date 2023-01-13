@@ -1,0 +1,41 @@
+<.header>
+  Listing Posts
+  <:actions>
+    <.link patch={~p"/posts/new"}>
+      <.button>New Squawk!</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table id="posts" rows={@posts_collection} row_click={&JS.navigate(~p"/posts/#{&1}")}>
+  <:col :let={posts} label="Username"><%= posts.username %></:col>
+  <:col :let={posts} label="Body"><%= posts.body %></:col>
+  <:col :let={posts} label="Likes"><%= posts.likes %></:col>
+  <:action :let={posts}>
+    <div class="sr-only">
+      <.link navigate={~p"/posts/#{posts}"}>Show</.link>
+    </div>
+    <.link patch={~p"/posts/#{posts}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={posts}>
+    <.link phx-click={JS.push("delete", value: %{id: posts.id})} data-confirm="Second thoughts, eh? Click ok to blow this squawk away.">
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="posts-modal"
+  show
+  on_cancel={JS.navigate(~p"/posts")}
+>
+  <.live_component
+    module={SquawkWeb.PostsLive.FormComponent}
+    id={@posts.id || :new}
+    title={@page_title}
+    action={@live_action}
+    posts={@posts}
+    navigate={~p"/posts"}
+  />
+</.modal>
