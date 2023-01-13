@@ -10,12 +10,12 @@ defmodule ChirpWeb.PostLive.PostComponent do
       <div class="p-1 pl-20 font-bold">@<%= @post.username %></div>
       <div class="p-1 pl-20"><%= @post.body %></div>
       <div class="actions text-center">
-        <a href="#" class="pl-3 pr-3" phx-click="like" phx-target={@myself}>
+        <.link href="#" class="pl-3 pr-3" phx-click="like" phx-target={@myself}>
           <Heroicons.heart class="w-4 h-4 stroke-current inline" /> <%= @post.likes_count %>
-        </a>
-        <a href="#" class="pl-3 pr-3" phx-click="repost" phx-target={@myself}>
+        </.link>
+        <.link href="#" class="pl-3 pr-3" phx-click="repost" phx-target={@myself}>
           <Heroicons.arrow_path_rounded_square class="w-4 h-4 stroke-current inline" /> <%= @post.repost_count %>
-        </a>
+        </.link>
         <.link patch={~p"/posts/#{@post.id}/edit"} class="pl-3 pr-3">
           <Heroicons.pencil_square class="w-4 h-4 stroke-current inline" />
         </.link>
