@@ -1,4 +1,4 @@
 [
   import_deps: [:ecto],
-  line_length: 220,
+  line_length: 220
 ]
