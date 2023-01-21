@@ -16,6 +16,8 @@ defmodule ChirpWeb.Router do
 
   scope "/", ChirpWeb do
     pipe_through :browser
+    get "/", PageController, :home
+
     live "/posts", PostLive.Index, :index
     live "/posts/new", PostLive.Index, :new
     live "/posts/:id/edit", PostLive.Index, :edit
