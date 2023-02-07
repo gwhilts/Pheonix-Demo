@@ -1,0 +1,29 @@
+<h1>What's On Your Desk?</h1>
+<div id="desks">
+  <.form
+    :let={f}
+    for={@changeset}
+    id="create-desk"
+    phx-submit="save"
+    phx-change="validate"
+  >
+    <.input field={{f, :name}} placeholder="Name" />
+
+    <.button phx-disable-with="Uploading...">Upload</.button>
+  </.form>
+
+  <div id="photos" phx-update="prepend">
+    <%= for desk <- @desks do %>
+      <div
+        :for={{photo, index} <- Enum.with_index(desk.photo_locations)}
+        class="photo"
+        id={"#{desk.id}-#{index}"}
+      >
+        <img src={photo} />
+        <div class="name">
+          <%= desk.name %> (<%= index + 1 %>)
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
