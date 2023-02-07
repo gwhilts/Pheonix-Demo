@@ -1,18 +1,33 @@
-<header class="h-20 w-full bg-primary opacity-50 backdrop-blur-2xl  shadow-lg">
-  <div class="ln"></div>
-  <div class="mn">
-    <ul class="hidden lg:flex self-center">
-      <li class="self-auto h-12"><a href="#development">Development</a></li>
-      <li class="self-auto h-12"><a href="#forensics">Forensics</a></li>
-      <li class="self-auto"><a href="#education">Education</a></li>
-      <li class="self-auto"><a href="#about">About B&O</a></li>
-      <li class="self-auto"><a href="/blog">Blog</a></li>
-    </ul>
-  </div>
-  <div class="rn"></div>
-</header>
+<nav class="h-14 w-full fixed bg-primary opacity-80 backdrop-blur-2xl shadow-lg flex flex-row text-violet-200 font-semibold">
+    <div id="nav_bar_left" class="basis-6/12 lg:basis-3/12 py-4 px-10 text-left">
+      <Heroicons.bars_3 class="h-6 w-10 lg:hidden inline-block" onclick="document.getElementById('mobile_nav_menu').classList.toggle('hidden')"/>
+      <a href="/" class="inline-block">Book & Owl</a>
+    </div> <%!-- end #nav_bar_left --%>
+    <div id="nav_bar_center" class="hidden lg:block basis-7/12 py-4">
+      <ul class="flex flex-row justify-center">
+        <li class="inline-block px-10"><a href="#development">Development</a></li>
+        <li class="inline-block px-10"><a href="#forensics">Forensics</a></li>
+        <li class="inline-block px-10"><a href="#education">Education</a></li>
+        <li class="inline-block px-10"><a href="#about">About</a></li>
+        <li class="inline-block px-10"><a href="/blog">Blog</a></li>
+      </ul>
+    </div> <%!-- end #nav_bar_center --%>
+    <div id="nav_bar_right" class="basis-6/12 lg:basis-2/12 py-4 px-10 text-right">
+      <a href="/login">Log in</a>
+    </div> <%!-- end #nav_bar_right --%>
+</nav>
 <div id="main">
-  <div class="min-h-screen">
+  <div id="mobile_nav_menu" class="hidden  bg-primary opacity-80 backdrop-blur-2xl min-h-screen min-w-screen pt-60">
+    <ul class="text-center text-2xl text-violet-200 font-semibold">
+      <li class="py-8" onclick="document.getElementById('mobile_nav_menu').classList.toggle('hidden')"><a href="/">Home</a></li>
+      <li class="py-8" onclick="document.getElementById('mobile_nav_menu').classList.toggle('hidden')"><a href="#development">Development</a></li>
+      <li class="py-8" onclick="document.getElementById('mobile_nav_menu').classList.toggle('hidden')"><a href="#forensics">Forensics</a></li>
+      <li class="py-8" onclick="document.getElementById('mobile_nav_menu').classList.toggle('hidden')"><a href="#education">Education</a></li>
+      <li class="py-8" onclick="document.getElementById('mobile_nav_menu').classList.toggle('hidden')"><a href="#about">About</a></li>
+      <li class="py-8" onclick="document.getElementById('mobile_nav_menu').classList.toggle('hidden')"><a href="/blog">Blog</a></li>
+    </ul>
+  </div> <%!-- end #mobile_nav_menu --%>
+  <div class="min-h-screen pt-60">
     <Heroicons.arrow_down_circle solid class="fill-primary h-10 w-10 animate-pulse" />
   </div>
 </div>
