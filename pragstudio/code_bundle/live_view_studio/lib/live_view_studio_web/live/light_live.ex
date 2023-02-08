@@ -16,24 +16,17 @@ defmodule LiveViewStudioWeb.LightLive do
       <button phx-click="down"><img src="/images/down.svg"/></button>
       <button phx-click="up"><img src="/images/up.svg"/></button>
       <button phx-click="on"><img src="/images/light-on.svg"/></button>
+      <button phx-click="random"><img src="/images/fire.svg"/></button>
     </div>
     """
   end
 
   def handle_event("on", _, socket) do
-    socket =
-      assign(socket,
-        brightness: 100
-      )
-      {:noreply, socket}
+      {:noreply, assign(socket, brightness: 100)}
   end
 
   def handle_event("off", _, socket) do
-    socket =
-      assign(socket,
-        brightness: 0
-      )
-      {:noreply, socket}
+      {:noreply, assign(socket, brightness: 0)}
   end
 
   def handle_event("down", _, socket) do
@@ -44,5 +37,7 @@ defmodule LiveViewStudioWeb.LightLive do
     {:noreply, update(socket, :brightness, &(min &1 + 10, 100))}
   end
 
-
+  def handle_event("random", _, socket) do
+    {:noreply, assign(socket, brightness: Enum.random(0..100))}
+  end
 end
