@@ -2,6 +2,10 @@ defmodule LiveViewStudioWeb.BingoLive do
   use LiveViewStudioWeb, :live_view
 
   def mount(_params, _session, socket) do
+    if connected?(socket) do
+      :timer.send_interval(3000, self(), :next_number)
+    end
+
     socket =
       assign(socket,
         number: nil,
@@ -45,5 +49,10 @@ defmodule LiveViewStudioWeb.BingoLive do
       Enum.map(numbers, &"#{letter} #{&1}")
     end)
     |> Enum.shuffle()
+  end
+
+
+  def handle_info(:next_number, socket) do
+    {:noreply, pick(socket)}
   end
 end
