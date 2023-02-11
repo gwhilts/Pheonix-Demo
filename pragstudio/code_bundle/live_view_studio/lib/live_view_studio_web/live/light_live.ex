@@ -13,7 +13,7 @@ defmodule LiveViewStudioWeb.LightLive do
         <span style={"width: #{@brightness}%; background: #{temp_color(@temp)}"}><%=@brightness %>%</span>
       </div>
       <form phx-change="dim">
-        <input type="range" min="0" max="100" name="brightness" value={@brightness}/>
+        <input type="range" min="0" max="100" name="brightness" value={@brightness} phx-debounce="250" />
       </form>
       <br/>
       <form phx-change="update_temp">
