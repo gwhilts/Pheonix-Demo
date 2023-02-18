@@ -33,22 +33,28 @@ defmodule LiveViewStudioWeb.AthletesLive do
         </div>
       </form>
       <div class="athletes">
-        <div :for={athlete <- @athletes} class="athlete">
-          <div class="emoji">
-            <%= athlete.emoji %>
-          </div>
-          <div class="name">
-            <%= athlete.name %>
-          </div>
-          <div class="details">
-            <span class="sport">
-              <%= athlete.sport %>
-            </span>
-            <span class="status">
-              <%= athlete.status %>
-            </span>
-          </div>
-        </div>
+        <.athlete :for={athlete <- @athletes} athlete={athlete} />
+      </div>
+    </div>
+    """
+  end
+
+  def athlete(assigns) do
+    ~H"""
+    <div class="athlete">
+      <div class="emoji">
+        <%= @athlete.emoji %>
+      </div>
+      <div class="name">
+        <%= @athlete.name %>
+      </div>
+      <div class="details">
+        <span class="sport">
+          <%= @athlete.sport %>
+        </span>
+        <span class="status">
+          <%= @athlete.status %>
+        </span>
       </div>
     </div>
     """
