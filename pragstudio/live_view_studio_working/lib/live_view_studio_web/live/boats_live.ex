@@ -2,6 +2,7 @@ defmodule LiveViewStudioWeb.BoatsLive do
   use LiveViewStudioWeb, :live_view
 
   alias LiveViewStudio.Boats
+  import LiveViewStudioWeb.CustomComponents
 
   def mount(_params, _session, socket) do
     socket =
@@ -21,6 +22,19 @@ defmodule LiveViewStudioWeb.BoatsLive do
       <:legal>Excluding weekends</:legal>
     </.promo>
     <div id="boats">
+      <.filter_form filter={@filter} />
+      <div class="boats">
+        <.boat :for={boat <- @boats} boat={boat} />
+      </div>
+      <.promo>
+        Hurry, only three boats left!
+      </.promo>
+    </div>
+    """
+  end
+
+  def filter_form(assigns) do
+    ~H"""
       <form phx-change="filter">
         <div class="filters">
           <select name="type">
@@ -44,46 +58,27 @@ defmodule LiveViewStudioWeb.BoatsLive do
           </div>
         </div>
       </form>
-      <div class="boats">
-        <div :for={boat <- @boats} class="boat">
-          <img src={boat.image} />
-          <div class="content">
-            <div class="model">
-              <%= boat.model %>
-            </div>
-            <div class="details">
-              <span class="price">
-                <%= boat.price %>
-              </span>
-              <span class="type">
-                <%= boat.type %>
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <.promo expiration="3">
-        Hurry, only three boats left!
-        <:legal>Excluding weekends</:legal>
-      </.promo>
-    </div>
     """
   end
 
-  def promo(assigns) do
+  def boat(assigns) do
     ~H"""
-      <div class="promo">
-        <div class="deal">
-          <%= render_slot(@inner_block) %>
+    <div class="boat">
+      <img src={@boat.image} />
+      <div class="content">
+        <div class="model">
+          <%= @boat.model %>
         </div>
-        <div class="expiration">
-          Deal expires in <%= @expiration %> hours.
-        </div>
-        <div class="legal">
-          <Heroicons.exclamation_circle />
-          <%= render_slot(@legal) %>
+        <div class="details">
+          <span class="price">
+            <%= @boat.price %>
+          </span>
+          <span class="type">
+            <%= @boat.type %>
+          </span>
         </div>
       </div>
+    </div>
     """
   end
 
