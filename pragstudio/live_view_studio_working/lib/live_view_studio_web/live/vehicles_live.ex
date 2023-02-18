@@ -39,7 +39,7 @@ defmodule LiveViewStudioWeb.VehiclesLive do
         </datalist>
       </form>
 
-      <div :if={@loading} class="loader"></div>
+      <.loader :if={@loading} />
 
       <div class="vehicles">
         <ul>

@@ -20,4 +20,10 @@ defmodule LiveViewStudioWeb.CustomComponents do
       </div>
     """
   end
+
+  def loader(assigns) do
+    ~H"""
+      <div class="loader"></div>
+    """
+  end
 end
