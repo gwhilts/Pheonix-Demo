@@ -5,17 +5,17 @@
       <thead>
         <tr>
           <th class="item">
-            <.sort_link sort_by="item" options={@options}>
+            <.sort_link sort_by={:item} options={@options}>
               Item
             </.sort_link>
           </th>
           <th>
-            <.sort_link sort_by="quantity" options={@options}>
+            <.sort_link sort_by={:quantity} options={@options}>
               Quantity
             </.sort_link>
           </th>
           <th>
-            <.sort_link sort_by="days_until_expires" options={@options}>
+            <.sort_link sort_by={:days_until_expires} options={@options}>
               Days Until Expires
             </.sort_link>
           </th>
@@ -29,7 +29,7 @@
             <%= donation.item %>
           </td>
           <td class="quantity">
-            <%= donation.quantity %> lbs
+            <%= donation.quantity %> kg
           </td>
           <td class="expires">
             <span class={

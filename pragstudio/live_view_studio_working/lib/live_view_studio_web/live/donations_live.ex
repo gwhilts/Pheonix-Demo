@@ -4,7 +4,6 @@ defmodule LiveViewStudioWeb.DonationsLive do
   alias LiveViewStudio.Donations
 
   def mount(_params, _session, socket) do
-    donations = Donations.list_donations()
     {:ok, socket, temporary_assigns: [donations: []]}
   end
 
@@ -25,10 +24,13 @@ defmodule LiveViewStudioWeb.DonationsLive do
     {:noreply, socket}
   end
 
+  attr :options, :map, required: true
+  attr :sort_by, :atom, required: true
+  slot :inner_block, required: true
   def sort_link(assigns) do
     ~H"""
     <.link patch={~p"/donations?#{%{sort_by: @sort_by, sort_order: next_sort_order(@options.sort_order)}}"}>
-      <%= render_slot(@inner_block) %>
+      <%= render_slot(@inner_block) %><span><%= sort_indicator(@sort_by, @options) %></span>
     </.link>
     """
   end
@@ -39,4 +41,14 @@ defmodule LiveViewStudioWeb.DonationsLive do
       :desc -> :asc
     end
   end
+
+  defp sort_indicator(col, %{sort_by: sort_by, sort_order: sort_order}) when col == sort_by do
+    IO.inspect({col, sort_by}, label: "sort_indicator args:")
+    case sort_order do
+      :asc -> " ↑"
+      :desc -> " ↓"
+    end
+  end
+
+  defp sort_indicator(_, _), do: ""
 end
