@@ -8,22 +8,17 @@ defmodule LiveViewStudioWeb.DonationsLive do
   end
 
   def handle_params(params, _uri, socket) do
-    sort_by = valid_sort_by(params)
-    sort_order = valid_sort_order(params)
-
-    page = (params["page"] || "1") |> String.to_integer()
-    per_page = (params["per_page"] || "5") |> String.to_integer()
-
     options = %{
-      sort_by: sort_by,
-      sort_order: sort_order,
-      page: page,
-      per_page: per_page
+      page: param_to_int(params["page"], 1),
+      per_page: param_to_int(params["per_page"], 5),
+      sort_by: valid_sort_by(params),
+      sort_order: valid_sort_order(params)
     }
 
     socket = assign(socket,
      donations: Donations.list_donations(options),
-     options: options
+     options: options,
+     total_count: Donations.count_donations()
     )
 
     {:noreply, socket}
@@ -45,6 +40,10 @@ defmodule LiveViewStudioWeb.DonationsLive do
     """
   end
 
+  defp more_pages?(options, total_count) do
+    options.page * options.per_page < total_count
+  end
+
   defp next_sort_order(sort_order) do
     case sort_order do
       :asc -> :desc
@@ -52,14 +51,20 @@ defmodule LiveViewStudioWeb.DonationsLive do
     end
   end
 
+  defp param_to_int(nil, default), do: default
+  defp param_to_int(param, default) do
+    case Integer.parse(param) do
+      :error -> default
+      {int, _} -> int
+    end
+  end
+
   defp sort_indicator(col, %{sort_by: sort_by, sort_order: sort_order}) when col == sort_by do
-    IO.inspect({col, sort_by}, label: "sort_indicator args:")
     case sort_order do
       :asc -> " ↑"
       :desc -> " ↓"
     end
   end
-
   defp sort_indicator(_, _), do: ""
 
   defp valid_sort_by(%{"sort_by" => sort_by}) when sort_by in ~w{item quantity days_until_expires} do
