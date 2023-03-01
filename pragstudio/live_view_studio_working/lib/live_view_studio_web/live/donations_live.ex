@@ -44,6 +44,16 @@ defmodule LiveViewStudioWeb.DonationsLive do
     options.page * options.per_page < total_count
   end
 
+  def pages(options, total_count) do
+    page_count = ceil(total_count / options.per_page)
+    for page_number <- (options.page - 2)..(options.page + 2), page_number > 0 do
+      if page_number <= page_count do
+        current_page? = page_number == options.page
+        {page_number, current_page?}
+      end
+    end
+  end
+
   defp next_sort_order(sort_order) do
     case sort_order do
       :asc -> :desc
