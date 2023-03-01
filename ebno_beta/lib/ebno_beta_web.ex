@@ -86,6 +86,7 @@ defmodule EbnoBetaWeb do
       import Phoenix.HTML
       # Core UI components and translation
       import EbnoBetaWeb.CoreComponents
+      import EbnoBetaWeb.CustomComponents
       import EbnoBetaWeb.Gettext
 
       # Shortcut for generating JS commands
