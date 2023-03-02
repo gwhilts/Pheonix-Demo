@@ -131,4 +131,8 @@ defmodule LiveViewStudio.PizzaOrders do
   def change_pizza_order(%PizzaOrder{} = pizza_order, attrs \\ %{}) do
     PizzaOrder.changeset(pizza_order, attrs)
   end
+
+  def count do
+    Repo.aggregate(PizzaOrder, :count, :id)
+  end
 end
