@@ -4,13 +4,20 @@ defmodule LiveViewStudioWeb.BoatsLive do
   alias LiveViewStudio.Boats
 
   def mount(_params, _session, socket) do
-    socket =
-      assign(socket,
-        filter: %{type: "", prices: []},
-        boats: Boats.list_boats()
-      )
-
     {:ok, socket, temporary_assigns: [boats: []]}
+  end
+
+  def handle_event("filter", %{"type" => type, "prices" => prices}, socket) do
+    params = %{type: type, prices: prices}
+    {:noreply, push_patch(socket, to: ~p"/boats?#{params}")}
+  end
+
+  def handle_params(params, _uri, socket) do
+    filter = %{
+      type: params["type"] || "",
+      prices: params["prices"] || [""]
+    }
+    {:noreply, assign(socket, filter: filter, boats: Boats.list_boats(filter))}
   end
 
   def render(assigns) do
@@ -32,7 +39,30 @@ defmodule LiveViewStudioWeb.BoatsLive do
     """
   end
 
-  def filter_form(assigns) do
+# private
+
+  defp boat(assigns) do
+    ~H"""
+    <div class="boat">
+      <img src={@boat.image} />
+      <div class="content">
+        <div class="model">
+          <%= @boat.model %>
+        </div>
+        <div class="details">
+          <span class="price">
+            <%= @boat.price %>
+          </span>
+          <span class="type">
+            <%= @boat.type %>
+          </span>
+        </div>
+      </div>
+    </div>
+    """
+  end
+
+  defp filter_form(assigns) do
     ~H"""
       <form phx-change="filter">
         <div class="filters">
@@ -58,33 +88,6 @@ defmodule LiveViewStudioWeb.BoatsLive do
         </div>
       </form>
     """
-  end
-
-  def boat(assigns) do
-    ~H"""
-    <div class="boat">
-      <img src={@boat.image} />
-      <div class="content">
-        <div class="model">
-          <%= @boat.model %>
-        </div>
-        <div class="details">
-          <span class="price">
-            <%= @boat.price %>
-          </span>
-          <span class="type">
-            <%= @boat.type %>
-          </span>
-        </div>
-      </div>
-    </div>
-    """
-  end
-
-  def handle_event("filter", %{"type" => type, "prices" => prices}, socket) do
-    filter = %{type: type, prices: prices}
-    boats = Boats.list_boats(filter)
-    {:noreply, assign(socket, boats: boats, filter: filter)}
   end
 
   defp type_options do
