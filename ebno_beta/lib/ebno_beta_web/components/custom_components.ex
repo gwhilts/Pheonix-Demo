@@ -8,6 +8,7 @@ defmodule EbnoBetaWeb.CustomComponents do
   # import EbnoBetaWeb.Gettext
 
   attr :href, :string, required: true
+  slot :inner_block, required: true
   def mobile_nav_item(assigns) do
     ~H"""
     <li class="py-8" onclick="document.getElementById('mobile_nav_menu').classList.toggle('hidden')">
