@@ -52,7 +52,9 @@ defmodule LiveViewStudioWeb.VolunteersLive do
     case Volunteers.create_volunteer(volunteer_params) do
       {:error, changeset} -> {:noreply, assign(socket, :form, to_form(changeset))}
       {:ok, volunteer} ->
-        socket = update(socket, :volunteers, fn volunteers -> [volunteer | volunteers] end)
+        socket =
+          update(socket, :volunteers, fn volunteers -> [volunteer | volunteers] end)
+          |> put_flash(:info, "It worked!")
         changeset = Volunteers.change_volunteer(%Volunteer{})
         {:noreply, assign(socket, :form, to_form(changeset))}
     end
