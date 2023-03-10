@@ -1,15 +1,19 @@
 defmodule LiveViewStudioWeb.ServersLive do
   use LiveViewStudioWeb, :live_view
 
+  alias Phoenix.LiveView
   alias LiveViewStudio.Servers
+  alias LiveViewStudio.Servers.Server
 
   def mount(_params, _session, socket) do
     servers = Servers.list_servers()
+    changeset = Servers.change_server(%Server{})
 
     socket =
       assign(socket,
         servers: servers,
-        coffees: 0
+        coffees: 0,
+        form: to_form(changeset)
       )
 
     {:ok, socket}
@@ -27,6 +31,7 @@ defmodule LiveViewStudioWeb.ServersLive do
   def render(assigns) do
     ~H"""
     <h1>Servers</h1>
+
     <div id="servers">
       <div class="sidebar">
         <div class="nav">
@@ -48,7 +53,16 @@ defmodule LiveViewStudioWeb.ServersLive do
       </div>
       <div class="main">
         <div class="wrapper">
+
+          <.form for={@form} phx-submit="save">
+            <div class="field"><.input field={@form[:name]} placeholder="Name" autocomplete="off" /></div>
+            <div class="field"><.input field={@form[:framework]} placeholder="Framework"/></div>
+            <div class="field"><.input field={@form[:size]} type="number" placeholder="Size (MB)" /></div>
+            <.button phx-disable-with="Saving...">Add server</.button>
+          </.form>
+
           <.server server={@selected_server} />
+
           <div class="links">
             <.link navigate={~p"/light"}>
               Adjust lights
@@ -92,5 +106,20 @@ defmodule LiveViewStudioWeb.ServersLive do
 
   def handle_event("drink", _, socket) do
     {:noreply, update(socket, :coffees, &(&1 + 1))}
+  end
+
+  def handle_event("save", %{"server" => server_params}, socket) do
+    case Servers.create_server(server_params) do
+      {:error, changeset} ->
+        IO.inspect(changeset)
+        socket = put_flash(socket, :error, "WTF?!")
+        {:noreply, assign(socket, :form, to_form(changeset))}
+      {:ok, server} ->
+        socket =
+          update(socket, :servers, fn servers -> [server | servers] end)
+          |> put_flash(:info, "Server added!")
+        changeset = Servers.change_server(%Server{})
+        {:noreply, assign(socket, :form, to_form(changeset))}
+    end
   end
 end
