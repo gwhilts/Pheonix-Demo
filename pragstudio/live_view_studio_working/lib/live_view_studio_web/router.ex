@@ -19,24 +19,26 @@ defmodule LiveViewStudioWeb.Router do
 
     get "/", PageController, :home
 
-    live "/light", LightLive
-    live "/sandbox", SandboxLive
-    live "/sales", SalesLive
-    live "/flights", FlightsLive
-    live "/boats", BoatsLive
-    live "/servers", ServersLive
-    live "/donations", DonationsLive
-    live "/volunteers", VolunteersLive
-    live "/topsecret", TopSecretLive
-    live "/presence", PresenceLive
-    live "/bookings", BookingsLive
-    live "/shop", ShopLive
-    live "/juggling", JugglingLive
-    live "/desks", DesksLive
-    live "/bingo", BingoLive
-    live "/vehicles", VehiclesLive
     live "/athletes", AthletesLive
+    live "/bingo", BingoLive
+    live "/boats", BoatsLive
+    live "/bookings", BookingsLive
+    live "/desks", DesksLive
+    live "/donations", DonationsLive
+    live "/flights", FlightsLive
+    live "/juggling", JugglingLive
+    live "/light", LightLive
     live "/pizza-orders", PizzaOrdersLive
+    live "/presence", PresenceLive
+    live "/sales", SalesLive
+    live "/sandbox", SandboxLive
+    live "/servers", ServersLive
+    live "/servers/new", ServersLive, :new
+    live "/servers/id", ServersLive
+    live "/shop", ShopLive
+    live "/topsecret", TopSecretLive
+    live "/vehicles", VehiclesLive
+    live "/volunteers", VolunteersLive
   end
 
   # Other scopes may use custom stacks.
