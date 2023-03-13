@@ -15,6 +15,23 @@ defmodule LiveViewStudioWeb.VolunteersLive do
     {:ok, socket}
   end
 
+  def handle_event("save", %{"volunteer" => volunteer_params}, socket) do
+    case Volunteers.create_volunteer(volunteer_params) do
+      {:error, changeset} -> {:noreply, assign(socket, :form, to_form(changeset))}
+      {:ok, volunteer} ->
+        socket = stream_insert(socket, :volunteers, volunteer, at: 0)
+        {:noreply, assign(socket, :form, to_form(Volunteers.change_volunteer(%Volunteer{})))}
+    end
+  end
+
+  def handle_event("validate", %{"volunteer" => volunteer_params}, socket) do
+    changeset =
+      %Volunteer{}
+      |> Volunteers.change_volunteer(volunteer_params)
+      |> Map.put(:action, :validate)
+    {:noreply, assign(socket, :form, to_form(changeset))}
+  end
+
   def render(assigns) do
     ~H"""
     <h1>Volunteer Check-In</h1>
@@ -48,20 +65,4 @@ defmodule LiveViewStudioWeb.VolunteersLive do
     """
   end
 
-  def handle_event("validate", %{"volunteer" => volunteer_params}, socket) do
-    changeset =
-      %Volunteer{}
-      |> Volunteers.change_volunteer(volunteer_params)
-      |> Map.put(:action, :validate)
-    {:noreply, assign(socket, :form, to_form(changeset))}
-  end
-
-  def handle_event("save", %{"volunteer" => volunteer_params}, socket) do
-    case Volunteers.create_volunteer(volunteer_params) do
-      {:error, changeset} -> {:noreply, assign(socket, :form, to_form(changeset))}
-      {:ok, volunteer} ->
-        socket = stream_insert(socket, :volunteers, volunteer, at: 0)
-        {:noreply, assign(socket, :form, to_form(Volunteers.change_volunteer(%Volunteer{})))}
-    end
-  end
 end
