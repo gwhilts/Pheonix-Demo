@@ -10,6 +10,46 @@ defmodule LiveViewStudioWeb.ServersLive do
     {:ok, socket}
   end
 
+  def handle_event("drink", _, socket) do
+    {:noreply, update(socket, :coffees, &(&1 + 1))}
+  end
+
+  def handle_event("save", %{"server" => server_params}, socket) do
+    case Servers.create_server(server_params) do
+      {:error, changeset} ->
+        IO.inspect(changeset)
+        socket = put_flash(socket, :error, "WTF, dude?!")
+        {:noreply, assign(socket, :form, to_form(changeset))}
+      {:ok, server} ->
+        socket =
+          update(socket, :servers, fn servers -> [server | servers] end)
+          |> put_flash(:info, "Server added!")
+        {:noreply, push_patch(socket, to: ~p"/servers")}
+    end
+  end
+
+  def handle_event("toggle-status", %{"id" => id}, socket) do
+    {:ok, server} =
+      Servers.get_server!(id)
+      |> Servers.toggle_status()
+
+    servers =
+      Enum.map(socket.assigns.servers, fn svr ->
+        if svr.id == server.id, do: server, else: svr
+      end)
+
+    {:noreply, assign(socket, selected_server: server, servers: servers)}
+  end
+
+  def handle_event("validate", %{"server" => server_params}, socket) do
+    changeset =
+      %Server{}
+      |> Servers.change_server(server_params)
+      |> Map.put(:action, :validate)
+
+    {:noreply, assign(socket, :form, to_form(changeset))}
+  end
+
   def handle_params(%{"id" => id}, _url, socket) do
     server = Servers.get_server!(id)
     {:noreply, assign(socket, selected_server: server, page_title: server.name)}
@@ -81,14 +121,14 @@ defmodule LiveViewStudioWeb.ServersLive do
     """
   end
 
-  def server(assigns) do
+  defp server(assigns) do
     ~H"""
     <div class="server">
       <div class="header">
         <h2><%= @server.name %></h2>
-        <span class={@server.status}>
+        <button class={@server.status} phx-click="toggle-status" phx-value-id={@server.id}>
           <%= @server.status %>
-        </span>
+        </button>
       </div>
       <div class="body">
         <div class="row">
@@ -109,32 +149,5 @@ defmodule LiveViewStudioWeb.ServersLive do
       </div>
     </div>
     """
-  end
-
-  def handle_event("drink", _, socket) do
-    {:noreply, update(socket, :coffees, &(&1 + 1))}
-  end
-
-  def handle_event("validate", %{"server" => server_params}, socket) do
-    changeset =
-      %Server{}
-      |> Servers.change_server(server_params)
-      |> Map.put(:action, :validate)
-
-    {:noreply, assign(socket, :form, to_form(changeset))}
-  end
-
-  def handle_event("save", %{"server" => server_params}, socket) do
-    case Servers.create_server(server_params) do
-      {:error, changeset} ->
-        IO.inspect(changeset)
-        socket = put_flash(socket, :error, "WTF, dude?!")
-        {:noreply, assign(socket, :form, to_form(changeset))}
-      {:ok, server} ->
-        socket =
-          update(socket, :servers, fn servers -> [server | servers] end)
-          |> put_flash(:info, "Server added!")
-        {:noreply, push_patch(socket, to: ~p"/servers")}
-    end
   end
 end
