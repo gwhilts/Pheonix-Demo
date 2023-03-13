@@ -24,6 +24,12 @@ defmodule LiveViewStudioWeb.VolunteersLive do
     end
   end
 
+  def handle_event("toggle-status", %{"id" => id}, socket) do
+    volunteer = Volunteers.get_volunteer!(id)
+    {:ok, volunteer} = Volunteers.update_volunteer(volunteer, %{checked_out: !volunteer.checked_out})
+    {:noreply, stream_insert(socket, :volunteers, volunteer)}
+  end
+
   def handle_event("validate", %{"volunteer" => volunteer_params}, socket) do
     changeset =
       %Volunteer{}
@@ -41,7 +47,6 @@ defmodule LiveViewStudioWeb.VolunteersLive do
         <.input field={@form[:phone]} type="tel" placeholder="Phone" autocomplete="off" phx-debounce="blur"/>
         <.button phx-disable-with="Saving...">Check In</.button>
       </.form>
-
       <div id="volunteers" phx-update="stream">
         <div
             :for={{volunteer_id, volunteer} <- @streams.volunteers}
@@ -55,7 +60,7 @@ defmodule LiveViewStudioWeb.VolunteersLive do
             <%= volunteer.phone %>
           </div>
           <div class="status">
-            <button>
+            <button phx-click={"toggle-status"} phx-value-id={volunteer.id}>
               <%= if volunteer.checked_out, do: "Check In", else: "Check Out" %>
             </button>
           </div>
@@ -64,5 +69,4 @@ defmodule LiveViewStudioWeb.VolunteersLive do
     </div>
     """
   end
-
 end
