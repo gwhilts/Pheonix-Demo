@@ -9,11 +9,10 @@ defmodule LiveViewStudioWeb.DesksLive do
 
     socket =
       assign(socket,
-        desks: Desks.list_desks(),
-        changeset: Desks.change_desk(%Desk{})
+        form: to_form(Desks.change_desk(%Desk{}))
       )
 
-    {:ok, socket, temporary_assigns: [desks: []]}
+    {:ok, stream(socket, :desks, Desks.list_desks())}
   end
 
   def handle_event("validate", %{"desk" => params}, socket) do
@@ -22,21 +21,25 @@ defmodule LiveViewStudioWeb.DesksLive do
       |> Desks.change_desk(params)
       |> Map.put(:action, :validate)
 
-    {:noreply, assign(socket, changeset: changeset)}
+    {:noreply, assign_form(socket, changeset)}
   end
 
   def handle_event("save", %{"desk" => params}, socket) do
     case Desks.create_desk(params) do
       {:ok, _desk} ->
         changeset = Desks.change_desk(%Desk{})
-        {:noreply, assign(socket, changeset: changeset)}
+        {:noreply, assign_form(socket, changeset)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, changeset: changeset)}
+        {:noreply, assign_form(socket, changeset)}
     end
   end
 
   def handle_info({:desk_created, desk}, socket) do
-    {:noreply, assign(socket, :desks, [desk])}
+    {:noreply, stream_insert(socket, :desks, desk, at: 0)}
+  end
+
+  defp assign_form(socket, %Ecto.Changeset{} = changeset) do
+    assign(socket, :form, to_form(changeset))
   end
 end

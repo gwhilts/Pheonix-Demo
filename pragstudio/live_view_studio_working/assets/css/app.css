@@ -581,7 +581,7 @@ h3 {
   @apply fixed inset-0 bg-slate-500 bg-opacity-75;
 }
 #shop #cart {
-  @apply fixed inset-y-0 right-0 pointer-events-none shadow-xl;
+  @apply z-20 fixed inset-y-0 right-0 pointer-events-none shadow-xl;
 }
 #shop #cart .content {
   @apply h-full relative w-screen max-w-xs bg-white pointer-events-auto py-6 px-8;
@@ -730,6 +730,9 @@ h3 {
 }
 #desks #photos {
   @apply flex flex-wrap items-center justify-center sm:justify-start;
+}
+#desks #photos div[id^=desks-] {
+  @apply inline-flex;
 }
 #desks #photos .photo {
   @apply text-center p-4 m-4 border-2 border-slate-300 rounded-xl;
