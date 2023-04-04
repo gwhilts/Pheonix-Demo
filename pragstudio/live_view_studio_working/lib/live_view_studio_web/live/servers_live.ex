@@ -2,7 +2,7 @@ defmodule LiveViewStudioWeb.ServersLive do
   use LiveViewStudioWeb, :live_view
 
   alias LiveViewStudio.Servers
-  alias LiveViewStudio.Servers.Server
+  # alias LiveViewStudio.Servers.Server
 
   def mount(_params, _session, socket) do
     servers = Servers.list_servers()
