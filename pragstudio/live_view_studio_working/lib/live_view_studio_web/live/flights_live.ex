@@ -16,6 +16,35 @@ defmodule LiveViewStudioWeb.FlightsLive do
     {:ok, socket}
   end
 
+  def handle_event("search", %{"airport" => airport}, socket) do
+    send(self(), {:run_search, airport})
+
+    socket =
+      assign(socket,
+        airport: airport,
+        flights: [],
+        loading: true
+      )
+    {:noreply, socket}
+  end
+
+  def handle_event("suggest", %{"airport" => prefix}, socket) do
+    socket =
+      assign(socket,
+        matches: Airports.suggest(prefix)
+      )
+    {:noreply, socket}
+  end
+
+  def handle_info({:run_search, airport}, socket) do
+    socket =
+      assign(socket,
+        flights: Flights.search_by_airport(airport),
+        loading: false
+      )
+    {:noreply, socket}
+  end
+
   def render(assigns) do
     ~H"""
     <h1>Find a Flight</h1>
@@ -69,35 +98,5 @@ defmodule LiveViewStudioWeb.FlightsLive do
       </div>
     </div>
     """
-  end
-
-  def handle_event("search", %{"airport" => airport}, socket) do
-    send(self(), {:run_search, airport})
-
-    socket =
-      assign(socket,
-        airport: airport,
-        flights: [],
-        loading: true
-      )
-    {:noreply, socket}
-  end
-
-  def handle_event("suggest", %{"airport" => prefix}, socket) do
-    socket =
-      assign(socket,
-        matches: Airports.suggest(prefix)
-      )
-    {:noreply, socket}
-  end
-
-
-  def handle_info({:run_search, airport}, socket) do
-    socket =
-      assign(socket,
-        flights: Flights.search_by_airport(airport),
-        loading: false
-      )
-    {:noreply, socket}
   end
 end
