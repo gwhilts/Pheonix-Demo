@@ -20,6 +20,12 @@ defmodule LiveViewStudioWeb.Router do
   scope "/", LiveViewStudioWeb do
     pipe_through :browser
 
+    live "/topsecret", TopSecretLive
+  end
+
+  scope "/", LiveViewStudioWeb do
+    pipe_through [:browser, :require_authenticated_user]
+
     get "/", PageController, :home
 
     live "/athletes", AthletesLive
@@ -39,7 +45,6 @@ defmodule LiveViewStudioWeb.Router do
     live "/servers/new", ServersLive, :new
     live "/servers/id", ServersLive
     live "/shop", ShopLive
-    live "/topsecret", TopSecretLive
     live "/vehicles", VehiclesLive
     live "/volunteers", VolunteersLive
   end
