@@ -20,7 +20,10 @@ defmodule LiveViewStudioWeb.Router do
   scope "/", LiveViewStudioWeb do
     pipe_through [:browser, :require_authenticated_user]
 
-    live "/topsecret", TopSecretLive
+    live_session :authenticated, on_mount: {LiveViewStudioWeb.UserAuth, :ensure_authenticated} do
+      live "/presence", PresenceLive
+      live "/topsecret", TopSecretLive
+    end
   end
 
   scope "/", LiveViewStudioWeb do
@@ -38,7 +41,6 @@ defmodule LiveViewStudioWeb.Router do
     live "/juggling", JugglingLive
     live "/light", LightLive
     live "/pizza-orders", PizzaOrdersLive
-    live "/presence", PresenceLive
     live "/sales", SalesLive
     live "/sandbox", SandboxLive
     live "/servers", ServersLive
