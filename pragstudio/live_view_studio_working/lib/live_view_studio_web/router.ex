@@ -18,13 +18,13 @@ defmodule LiveViewStudioWeb.Router do
   end
 
   scope "/", LiveViewStudioWeb do
-    pipe_through :browser
+    pipe_through [:browser, :require_authenticated_user]
 
     live "/topsecret", TopSecretLive
   end
 
   scope "/", LiveViewStudioWeb do
-    pipe_through [:browser, :require_authenticated_user]
+    pipe_through :browser
 
     get "/", PageController, :home
 
